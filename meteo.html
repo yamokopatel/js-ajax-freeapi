@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Meteo api usage</title>
+    </head>
+    <body>
+        <h2>Weather</h2>
+        <div>
+            <label for="ns">North-South</label>
+            <input type="number" name="ns" id="ns">
+            <br>
+            <label for="ew">East-West</label>
+            <input type="number" name="ew" id="ew">
+            <br>
+            <button id="loader">Load data</button>
+        </div>
+        <div>
+            <p id="temp">--</p>
+            <p id="wind">--</p>
+        </div>
+    </body>
+    <script>
+        const ns = document.getElementById("ns");
+        const ew = document.getElementById("ew");
+        const loader = document.getElementById("loader");
+        const temp = document.getElementById("temp");
+        const wind = document.getElementById("wind");
+
+        // veids 1
+        /*loader.addEventListener('click', () =>
+        {
+            let lat = ns.value; let lon = ew.value;
+            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,wind_speed_10m`)
+                .then(response => response.json())
+                .then(data =>
+                {
+                    temp.innerText = "Temperature: " + data.current.temperature_2m;
+                    wind.innerText = "Wind speed: " + data.current.wind_speed_10m;
+                })
+                .catch(err => console.error("Error:", err));
+        });*/
+
+        // veids 2
+        async function getTempAndWind()
+        {
+            try
+            {
+                let lat = ns.value; let lon = ew.value;
+                let response  = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,wind_speed_10m`);
+                let data = await response.json();
+
+                temp.innerText = "Temperature: " + data.current.temperature_2m;
+                wind.innerText = "Wind speed: " + data.current.wind_speed_10m;
+            }
+            catch (err)
+            {
+                console.error("Error: ", err);
+            }
+        }
+        loader.addEventListener('click', getTempAndWind);
+
+        // veids 3
+        /*loader.addEventListener('click', () =>
+        {
+            let lat = ns.value; let lon = ew.value;
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,wind_speed_10m`, true);
+            xhr.onload = function()
+            {
+                if(xhr.status == 200)
+                {
+                    let data = JSON.parse(xhr.responseText);
+                    temp.innerText = "Temperature: " + data.current.temperature_2m;
+                    wind.innerText = "Wind speed: " + data.current.wind_speed_10m;
+                }
+                else
+                {
+                    console.warn("Status: " + xhr.status);
+                }
+            }
+            xhr.send();
+        });*/
+    </script>
+</html>

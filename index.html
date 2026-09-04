@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Free API usage</title>
+    </head>
+    <body>
+        <input type="number" id="code" min="100">
+        <button id="loader">Load picture</button>
+        <br>
+        <img src="https://promptsideas.b-cdn.net/prompts/11352/M9GM3El5FARq130nkiWI.png" alt="Detective cat" id="catImage">
+    </body>
+    <script>
+        const code = document.getElementById("code");
+        const loader = document.getElementById("loader");
+        const catImage = document.getElementById("catImage");
+
+        // loader.addEventListener('click', () =>
+        // {
+        //     let status = code.value;
+        //     fetch("https://http.cat/" + status)
+        //         .then(answer => answer.json())
+        //         .then(data =>
+        //         {
+        //             catImage.src = "https://http.cat/" + status;
+        //             console.log(data);
+        //         })
+        //         .catch(err =>
+        //         {
+        //             console.error("Unable to find image: ", err);
+        //             catImage.src = "https://http.cat/404";
+        //         });
+        // });
+
+        loader.addEventListener('click', () => {
+            let status = code.value;
+            let address = "https://http.cat/" + status;
+            try{
+                catImage.src = address;
+            }catch(err) {
+                console.error("Unable to find image: ", err);
+                catImage.src = "https://http.cat/404";
+            };
+        });
+    </script>
+</html>
