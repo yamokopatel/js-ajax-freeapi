@@ -20,9 +20,11 @@
     </body>
     <script>
         async function loadPosts(){
+            console.warn("post JSON loading")
             try{
                 let response = await fetch("http://127.0.0.1:8000/api/posts");
                 let data = await response.json();
+                console.warn("JSON is loaded")
                 return data;
             }catch(err){
                 console.error("JSON loading error: ", err);
@@ -34,6 +36,7 @@
         const postList = document.getElementById("postList");
         document.addEventListener('DOMContentLoaded', () => {
             posts = loadPosts();
+            console.log(posts);
         })
     </script>
 </html>
