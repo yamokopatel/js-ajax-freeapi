@@ -1,0 +1,84 @@
+<!-- <!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Post List</title>
+    </head>
+    <body>
+        <h2>Posts and comments</h2>
+        <div>
+            <label for="id">Post id:   </label>
+            <input type="number" id="postIdInput" min="0" step="1">
+            <button id="postChooseButton">Watch post</button>
+        </div>
+        <div>
+            <ul id="postList">
+
+            </ul>
+        </div>
+    </body>
+    <script>
+        const posts = {{ Js::from($posts) }};
+        const comments = {{ Js::from('comments') }};
+        const postIdInput = document.getElementById("postIdInput");
+        const postChooseButton = document.getElementById("postChooseButton");
+        const postList = document.getElementById("postList");
+        // console.log(posts);
+        function outputPost(){
+            try{
+                postList.innnerHTML = "";
+                if(postIdInput.value > -1){
+                    let li = document.createElement("li");
+                    if(posts.some(post => post.id === postIdInput.value)){
+                        let h4 = document.createElement("h4");
+                        h4.innerText = post.created_at;
+                        let p = document.createElement("p");
+                        p.innerText = post.content;
+                        li.appendChild(h4); li.appendChild(p);
+                        li.appendChild(outputComments(post.id));
+                    }else{
+                        li.innerText = "Post with that id does not exist."
+                    }
+                    postList.appendChild(li);
+                }else if(postIdInput.value == ""){
+                    for(let post of posts){
+                        let li = document.createElement("li");
+                        createContext(post, li);
+                        li.appendChild(outputComments(post.id));
+                        postList.appendChild(li);
+                    }
+                }else{
+                    let li = document.createElement("li");
+                    li.innerText = "Incorrect request!"
+                }
+            }catch(err){
+                console.error("Error in post request: ", err);
+            }
+        }
+        function outputComments(postId){
+            let commentUl = document.createElement("ul");
+            for(let comment of comments){
+                if(comment.post_id == postId){
+                    let li = document.createElement("li");
+                    // let h4 = document.createElement("h4");
+                    // h4.innerText = comment.created_at;
+                    // let p = document.createElement("p");
+                    // p.innerText = comment.content;
+                    // li.appendChild(h4); li.appendChild(p);
+                    createContext(comment, li);
+                    commentUl.appendChild(li);
+                }
+            }
+            return commentUl;
+        }
+        function createContext(listItem, li){
+            let h4 = document.createElement("h4");
+                    h4.innerText = listItem.created_at;
+                    let p = document.createElement("p");
+                    p.innerText = listItem.content;
+                    li.appendChild(h4); li.appendChild(p);
+        }
+
+        postChooseButton.addEventListener('click', outputPost);
+    </script>
+</html> -->

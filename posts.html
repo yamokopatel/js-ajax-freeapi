@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Post List</title>
+    </head>
+    <body>
+        <h2>Posts and comments</h2>
+        <div>
+            <label for="id">Post id:   </label>
+            <input type="number" id="postIdInput" min="0" step="1">
+            <button id="postChooseButton">Watch post</button>
+        </div>
+        <div>
+            <ul id="postList">
+
+            </ul>
+        </div>
+    </body>
+    <script>
+        async function loadPosts(){
+            try{
+                let response = await fetch("http://127.0.0.1:8000/api/posts");
+                let data = await response.json();
+                return data;
+            }catch(err){
+                console.error("JSON loading error: ", err);
+            }
+        }
+        let posts;
+        const postIdInput = document.getElementById("postIdInput");
+        const postChooseButton = document.getElementById("postChooseButton");
+        const postList = document.getElementById("postList");
+        document.addEventListener('DOMContentLoaded', () => {
+            posts = loadPosts();
+        })
+    </script>
+</html>
