@@ -34,9 +34,9 @@
         const postIdInput = document.getElementById("postIdInput");
         const postChooseButton = document.getElementById("postChooseButton");
         const postList = document.getElementById("postList");
-        document.addEventListener('DOMContentLoaded', () => {
-            posts = loadPosts();
-            // console.log(posts);
+        document.addEventListener('DOMContentLoaded', async () => {
+            posts = await loadPosts();
+            console.error(posts);
         });
         postChooseButton.addEventListener('click', outputPosts);
 
@@ -51,16 +51,16 @@
                 let id = parseInt(postIdInput.value);
                 try{
                     let record = posts.find(post => post.id == id);
-                    createContext(record, listElement);
+                    createPostContext(record, listElement);
                 }catch(err){
                     listElement.innerText = "Incorrect request: Not Existed id Provided";
                 }
                 postList.appendChild(listElement);
-            }else if(Array.from(postIdInput.value) === 0){
+            }else if(postIdInput.value === ""){
                 console.log("requested all");
                 for(let post of posts){
                     let listElement = document.createElement("li");
-                    createContext(post, listElement);
+                    createPostContext(post, listElement);
                     postList.appendChild(listElement);
                 }
             }else{
@@ -70,12 +70,12 @@
                 postList.appendChild(listElement);
             }
         }
-        function createContext(listItem, li){
-            let h4 = document.createElement("h4");
-            h4.innerText = listItem.created_at;
+        function createPostContext(listItem, li){
+            let h5 = document.createElement("h5");
+            h5.innerText = listItem.created_at;
             let p = document.createElement("p");
-            p.innerText = listItem.content;
-            li.appendChild(h4); li.appendChild(p);
+            p.innerText = listItem.body;
+            li.appendChild(h5); li.appendChild(p);
         }
     </script>
 </html>
