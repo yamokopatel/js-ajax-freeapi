@@ -36,7 +36,46 @@
         const postList = document.getElementById("postList");
         document.addEventListener('DOMContentLoaded', () => {
             posts = loadPosts();
-            console.log(posts);
-        })
+            // console.log(posts);
+        });
+        postChooseButton.addEventListener('click', outputPosts);
+
+        function outputPosts(){
+            console.warn(Array.from(postIdInput.value));
+            console.warn("User request: \"", postIdInput.value, "\"");
+            console.log("output started");
+            postList.innerHTML = "";
+            if(parseInt(postIdInput.value) > -1){
+                console.log("requested by id")
+                let listElement = document.createElement("li");
+                let id = parseInt(postIdInput.value);
+                try{
+                    let record = posts.find(post => post.id == id);
+                    createContext(record, listElement);
+                }catch(err){
+                    listElement.innerText = "Incorrect request: Not Existed id Provided";
+                }
+                postList.appendChild(listElement);
+            }else if(Array.from(postIdInput.value) === 0){
+                console.log("requested all");
+                for(let post of posts){
+                    let listElement = document.createElement("li");
+                    createContext(post, listElement);
+                    postList.appendChild(listElement);
+                }
+            }else{
+                console.log("invalid request");
+                let listElement = document.createElement("li");
+                listElement.innerText = "Incorrect request: Invalid Parameter Provided";
+                postList.appendChild(listElement);
+            }
+        }
+        function createContext(listItem, li){
+            let h4 = document.createElement("h4");
+            h4.innerText = listItem.created_at;
+            let p = document.createElement("p");
+            p.innerText = listItem.content;
+            li.appendChild(h4); li.appendChild(p);
+        }
     </script>
 </html>
