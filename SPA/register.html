@@ -10,6 +10,8 @@
             <a href="/SPA/" data-link>Home</a>
             <a href="/SPA/posts.html" data-link>Posts</a>
             <a href="/SPA/writePost.html" data-link>New post</a>
+            //
+            <a href="/SPA/login.html" data-link>Log in</a>
         </nav>
         <div>
             <label for="name">Username: </label>
@@ -52,11 +54,12 @@
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
+                localStorage.setItem("token", data.token);
             })
             .catch(err =>{
-                console.error(err);
+                alert(err);
             });
         }
+        registerButton.addEventListener('click', register);
     </script>
 </html>
