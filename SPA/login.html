@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Log In</title>
+        <script src="logSwitch.js"></script>
     </head>
     <body>
         <nav>
@@ -11,7 +12,8 @@
             <a href="/SPA/posts.html" data-link>Posts</a>
             <a href="/SPA/writePost.html" data-link>New post</a>
             //
-            <a href="/SPA/login.html" data-link>Log in</a>
+            <a href="/SPA/login.html" id="logInLink" data-link>Log in</a>
+            <a href="/SPA/logout.html" id="logOutLink" data-link>Log out</a>
         </nav>
         <div>
             <label for="email">Email: </label>
@@ -42,7 +44,10 @@
                 },
                 body: JSON.stringify(userData)
             })
-            .then(response => response.json())
+            .then(response => {
+                response.json();
+                window.location.href("/SPA/");
+            })
             .then(data => localStorage.setItem("token", data.token))
             .catch(err => alert(err));
         }
