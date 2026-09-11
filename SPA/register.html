@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Register</title>
+    </head>
+    <body>
+        <nav>
+            <a href="/SPA/" data-link>Home</a>
+            <a href="/SPA/posts.html" data-link>Posts</a>
+            <a href="/SPA/writePost.html" data-link>New post</a>
+        </nav>
+        <div>
+            <label for="name">Username: </label>
+            <input type="text" name="name" id="usernameInput">
+            <br>
+            <label for="email">Email: </label>
+            <input type="text" name="email" id="emailInput">
+            <br>
+            <label for="email">Password: </label>
+            <input type="text" name="password" id="passwordInput">
+            <br>
+            <label for="email">Confirm password: </label>
+            <input type="text" name="cPassword" id="cPasswordInput">
+            <br>
+            <button id="registerButton">Register</button>
+        </div>
+    </body>
+    <script>
+        const usernameInput = document.getElementById("usernameInput");
+        const emailInput = document.getElementById("emailInput");
+        const passwordInput = document.getElementById("passwordInput");
+        const cPasswordInput = document.getElementById("cPasswordInput");
+        const registerButton = document.getElementById("registerButton");
+
+        function register(){
+            let newUserData = {
+                name: usernameInput.value,
+                email: emailInput.value,
+                password: passwordInput.value,
+                password_confirmation: cPasswordInput.value
+            };
+
+            fetch("http://127.0.0.1:8000/api/register", {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(newUserData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+            })
+            .catch(err =>{
+                console.error(err);
+            });
+        }
+    </script>
+</html>
