@@ -14,8 +14,38 @@
             <a href="/SPA/login.html" data-link>Log in</a>
         </nav>
         <div>
-
+            <label for="email">Email: </label>
+            <input type="text" name="email" id="emailInput">
+            <br>
+            <label for="password">Password: </label>
+            <input type="text" name="password" id="passwordInput">
+            <br>
+            <button id="logInButton">Log in</button>
         </div>
         <a href="/SPA/register.html" data-link>Register</a>
     </body>
+    <script>
+        const emailInput = document.getElementById("emailInput");
+        const passwordInput = document.getElementById("passwordInput");
+        const logInButton = document.getElementById("logInButton");
+
+        function logIn(){
+            let userData = {
+                email: emailInput.value,
+                password: passwordInput.value
+            };
+            fetch("http://127.0.0.1:8000/api/login", {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(userData)
+            })
+            .then(response => response.json())
+            .then(data => localStorage.setItem("token", data.token))
+            .catch(err => alert(err));
+        }
+        logInButton.addEventListener('click', logIn);
+    </script>
 </html>
