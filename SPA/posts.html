@@ -112,6 +112,20 @@
             let p = document.createElement("p");
             p.innerText = listItem.body;
             li.appendChild(h4); li.appendChild(h5); li.appendChild(p);
+
+            if(localStorage.getItem("userId") == listItem.user_id){
+                let delButton = document.createElement("button"); delButton.innerText = "Delete";
+                delButton.addEventListener('click', () => {
+                    fetch(`http://127.0.0.1:8000/api/posts/${listItem.id}`, {
+                        method: "DELETE",
+                        headers: {
+                            "Accept": "application/json",
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    })
+                });
+            }
         }
         function createNewPost(){
             let newPostData = {
