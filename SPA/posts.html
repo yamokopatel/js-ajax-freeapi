@@ -10,11 +10,20 @@
         <nav>
             <a href="/SPA/" data-link>Home</a>
             <a href="/SPA/posts.html" data-link>Posts</a>
-            <a href="/SPA/writePost.html" data-link>New post</a>
             //
             <a href="/SPA/login.html" id="logInLink" data-link>Log in</a>
             <a href="/SPA/logout.html" id="logOutLink" data-link>Log out</a>
         </nav>
+        <div id="store">
+            <h2>New post</h2>
+            <div>
+                <input type="text" name="title" id="postTitle" placeholder="New Post Title">
+                <br>
+                <textarea name="body" id="postBody" cols="30" placeholder="New post content"></textarea>
+                <br>
+                <button id="postCreationButton">Submit</button>
+            </div>
+        </div>
         <div id="ĪndexAndShow">
             <h2>Posts and comments</h2>
             <div>
@@ -30,11 +39,11 @@
     </body>
     <script>
         async function loadPosts(){
-            console.warn("post JSON loading")
+            // console.warn("post JSON loading")
             try{
                 let response = await fetch("http://127.0.0.1:8000/api/posts");
                 let data = await response.json();
-                console.warn("JSON is loaded")
+                // console.warn("JSON is loaded")
                 return data;
             }catch(err){
                 console.error("JSON loading error: ", err);
@@ -44,19 +53,34 @@
         const postIdInput = document.getElementById("postIdInput");
         const postChooseButton = document.getElementById("postChooseButton");
         const postList = document.getElementById("postList");
+
+        const postTitle = document.getElementById("postTitle");
+        const postBody = document.getElementById("postBody");
+        const postCreationButton = document.getElementById("postCreationButton");
+
         document.addEventListener('DOMContentLoaded', async () => {
             posts = await loadPosts();
-            console.error(posts);
+            // console.error(posts);
+        });
+        window.addEventListener('load', () => {
+            const storeDiv = document.getElementById("store");
+
+            if(localStorage.getItem("token") !== null){
+                storeDiv.style.display = "";
+            }else{
+                storeDiv.style.display = "none";
+            }
         });
         postChooseButton.addEventListener('click', outputPosts);
+        postCreationButton.addEventListener('click', createNewPost);
 
         function outputPosts(){
-            console.warn(Array.from(postIdInput.value));
-            console.warn("User request: \"", postIdInput.value, "\"");
-            console.log("output started");
+            // console.warn(Array.from(postIdInput.value));
+            // console.warn("User request: \"", postIdInput.value, "\"");
+            // console.log("output started");
             postList.innerHTML = "";
             if(parseInt(postIdInput.value) > -1){
-                console.log("requested by id")
+                // console.log("requested by id")
                 let listElement = document.createElement("li");
                 let id = parseInt(postIdInput.value);
                 try{
@@ -67,14 +91,14 @@
                 }
                 postList.appendChild(listElement);
             }else if(postIdInput.value === ""){
-                console.log("requested all");
+                // console.log("requested all");
                 for(let post of posts){
                     let listElement = document.createElement("li");
                     createPostContext(post, listElement);
                     postList.appendChild(listElement);
                 }
             }else{
-                console.log("invalid request");
+                // console.log("invalid request");
                 let listElement = document.createElement("li");
                 listElement.innerText = "Incorrect request: Invalid Parameter Provided";
                 postList.appendChild(listElement);
@@ -86,6 +110,28 @@
             let p = document.createElement("p");
             p.innerText = listItem.body;
             li.appendChild(h5); li.appendChild(p);
+        }
+        function createNewPost(){
+            let newPostData = {
+                title: postTitle.value,
+                body: postBody.value
+            };
+
+            fetch("http://127.0.0.1:8000/api/posts", {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                },
+                body: JSON.stringify(newPostData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                loadPosts();
+                postTitle.value = ""; postBody.value = "";
+            })
+            .catch(err => console.error(err));
         }
     </script>
 </html>
