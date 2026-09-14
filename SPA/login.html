@@ -44,11 +44,11 @@
                 },
                 body: JSON.stringify(userData)
             })
-            .then(response => {
-                response.json();
-                window.location.href("/SPA/");
+            .then(response =>  response.json())
+            .then(data => {
+                localStorage.setItem("token", data.token);
+                window.location.replace("/SPA/");
             })
-            .then(data => localStorage.setItem("token", data.token))
             .catch(err => alert(err));
         }
         logInButton.addEventListener('click', logIn);

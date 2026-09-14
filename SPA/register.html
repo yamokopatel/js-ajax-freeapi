@@ -57,7 +57,7 @@
             .then(response => response.json())
             .then(data => {
                 localStorage.setItem("token", data.token);
-                window.location.href("/SPA/");
+                window.location.replace("/SPA/");
             })
             .catch(err =>{
                 alert(err);
