@@ -105,11 +105,13 @@
             }
         }
         function createPostContext(listItem, li){
+            let h4 = document.createElement("h4");
+            h4.innerHTML = listItem.title;
             let h5 = document.createElement("h5");
             h5.innerText = listItem.created_at;
             let p = document.createElement("p");
             p.innerText = listItem.body;
-            li.appendChild(h5); li.appendChild(p);
+            li.appendChild(h4); li.appendChild(h5); li.appendChild(p);
         }
         function createNewPost(){
             let newPostData = {

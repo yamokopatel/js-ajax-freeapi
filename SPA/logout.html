@@ -19,6 +19,7 @@
             .then(data => {
                 // console.warn(data.message);
                 localStorage.removeItem("token");
+                localStorage.removeItem("userId");
                 window.location.replace("/SPA/");
             })
             .catch(err => {
