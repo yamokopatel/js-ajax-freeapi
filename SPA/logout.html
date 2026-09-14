@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Log out</title>
+    </head>
+    <script>
+        window.addEventListener('load', () => {
+            fetch("http://127.0.0.1:8000/api/logout", {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // console.warn(data.message);
+                localStorage.removeItem("token");
+                window.location.replace("/SPA/");
+            })
+            .catch(err => {
+                // console.error(err);
+                window.location.replace("/SPA/")
+            });
+        });
+    </script>
+</html>
