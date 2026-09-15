@@ -124,7 +124,14 @@
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
                     })
+                    .then(response => response.json())
+                    .then(data =>  {
+                        delButton.parentNode.remove();
+                        loadPosts();
+                    })
+                    .catch(err => alert(err));
                 });
+                li.appendChild(delButton);
             }
         }
         function createNewPost(){
