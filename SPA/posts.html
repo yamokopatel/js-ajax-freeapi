@@ -124,15 +124,17 @@
             li.appendChild(h4); li.appendChild(h5); li.appendChild(p);
 
             if(localStorage.getItem("token") !== null){
-                let commentButton = document.createElement("button"); delButton.innerText = "Comment";
+                let commentButton = document.createElement("button"); commentButton.innerText = "Comment";
+                li.appendChild(commentButton);
                 commentButton.addEventListener('click', () => {
+                    commentButton.style.display = "none";
                     let commentDiv = document.createElement("div");
                     let commentArea = document.createElement("textarea");
                     let commentApplyButton = document.createElement("button"); commentApplyButton.innerText = "Apply";
                     let commentCancelButton = document.createElement("button"); commentCancelButton.innerText = "Cancel";
                     commentDiv.appendChild(commentArea); commentDiv.appendChild(commentApplyButton); commentDiv.appendChild(commentCancelButton);
+                    li.appendChild(commentDiv);
                     commentApplyButton.addEventListener('click', () => {
-                        commentButton.style.display = "none";
                         let newCommentData = {content: commentArea.value};
                         fetch(`http://127.0.0.1:8000/api/posts/${listItem.id}/comments`, {
                             method: "POST",
@@ -182,12 +184,15 @@
             }
 
             li.appendChild(ul);
-            let comments = loadComments(listItem.id);
-            for(let comment of comments){
-                let commentLi = document.createElement("li");
-                createCommentContext(comment, commentLi);
-                ul.appendChild(commentLi);
-            }
+            let comments = loadComments(listItem.id).then(comments => {
+                if(comments.length > 0){
+                    for(let comment of comments){
+                        let commentLi = document.createElement("li");
+                        createCommentContext(comment, commentLi);
+                        ul.appendChild(commentLi);
+                    }
+                }
+            });
         }
         function createNewPost(){
             let newPostData = {
