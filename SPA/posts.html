@@ -171,6 +171,52 @@
             }*/
 
             if(localStorage.getItem("userId") == listItem.user_id){
+                let updButton = document.createElement("button"); updButton.innerText = "Edit";
+                updButton.addEventListener('click', () => {
+                    updButton.style.display = "none";
+
+                    let editInput = document.createElement("input"); editInput.value = h4.innerText;
+                    let editTextarea = document.createElement("textarea"); editTextarea.value = p.innerText; editTextarea.cols = 30;
+                    let editApplyButton = document.createElement("button"); editApplyButton.innerText = "Apply";
+                    let editCancelButton = document.createElement("button"); editCancelButton.innerText = "Cancel";
+
+                    li.appendChild(editApplyButton); li.appendChild(editCancelButton);
+                    h4.replaceWith(editInput); p.replaceWith(editTextarea);
+
+                    editCancelButton.addEventListener('click', () => {
+                        editInput.replaceWith(h4); editTextarea.replaceWith(p);
+                        updButton.style.display = "";
+                        editApplyButton.remove(); editCancelButton.remove();
+                    });
+
+                    editApplyButton.addEventListener('click', () => {
+                        let updPostData = {
+                            title: editInput.value,
+                            body: editTextarea.value
+                        };
+                        fetch(`http://127.0.0.1:8000/api/posts/${listItem.id}`, {
+                            method: "PUT",
+                            headers: {
+                                "Accept": "application/json",
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            },
+                            body: JSON.stringify(updPostData)
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            h4.innerText = data.title; p.innerText = data.body;
+                            editInput.replaceWith(h4); editTextarea.replaceWith(p);
+                            updButton.style.display = "";
+                            editApplyButton.remove(); editCancelButton.remove();
+                        })
+                        .catch(err => console.error(err));
+                    });
+                });
+                li.appendChild(updButton);
+            }
+
+            if(localStorage.getItem("userId") == listItem.user_id){
                 let delButton = document.createElement("button"); delButton.innerText = "Delete";
                 delButton.addEventListener('click', () => {
                     fetch(`http://127.0.0.1:8000/api/posts/${listItem.id}`, {
