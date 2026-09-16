@@ -49,6 +49,15 @@
                 console.error("JSON loading error: ", err);
             }
         }
+        async function loadComments(postId){
+            try{
+                let response = await fetch(`http://127.0.0.1:8000/api/posts/${postId}/comments`);
+                let data = await response.json();
+                return data;
+            }catch(err){
+                console.error("JSON loading error: ", err);
+            }
+        }
         let posts;
         const postIdInput = document.getElementById("postIdInput");
         const postChooseButton = document.getElementById("postChooseButton");
@@ -111,7 +120,8 @@
             h5.innerText = listItem.created_at;
             let p = document.createElement("p");
             p.innerText = listItem.body;
-            li.appendChild(h4); li.appendChild(h5); li.appendChild(p);
+            let ul = document.createAttribute("ul");
+            li.appendChild(h4); li.appendChild(h5); li.appendChild(p); li.appendChild(ul);
 
             if(localStorage.getItem("userId") == listItem.user_id){
                 let delButton = document.createElement("button"); delButton.innerText = "Delete";
@@ -132,6 +142,13 @@
                     .catch(err => alert(err));
                 });
                 li.appendChild(delButton);
+            }
+
+            let comments = loadComments(listItem.id);
+            for(let comment of comments){
+                let commentLi = document.createElement("li");
+                createCommentContext(comment, commentLi);
+                ul.appendChild(commentLi);
             }
         }
         function createNewPost(){
@@ -158,6 +175,13 @@
                 postList.appendChild(li);
             })
             .catch(err => console.error(err));
+        }
+        function createCommentContext(comment, li){
+            let h6 = document.createElement("h6");
+            h6.innerText = comment.created_at;
+            let p = document.createElement("p");
+            p.innerText = comment.content;
+            li.appendChild(h6); li.appendChild(p);
         }
     </script>
 </html>
