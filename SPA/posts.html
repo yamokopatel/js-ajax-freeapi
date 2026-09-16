@@ -123,7 +123,7 @@
             let ul = document.createElement("ul");
             li.appendChild(h4); li.appendChild(h5); li.appendChild(p);
 
-            if(localStorage.getItem("token") !== null){
+            /*if(localStorage.getItem("token") !== null){
                 let commentButton = document.createElement("button"); commentButton.innerText = "Comment";
                 li.appendChild(commentButton);
                 commentButton.addEventListener('click', () => {
@@ -145,7 +145,15 @@
                             },
                             body: JSON.stringify(newCommentData)
                         })
-                        .then(response => response.json())
+                        .then(async response => {
+                            const data = await response.json();
+                            console.log("HTTP status:", response.status);
+                            console.log("Response:", data);
+                            if (!response.ok) {
+                                throw new Error(data.message || `HTTP ${response.status}`);
+                            }
+                            return data;
+                        })
                         .then(data => {
                             commentButton.style.display = "";
                             let newCommentLi = document.createElement("li");
@@ -160,7 +168,7 @@
                         commentDiv.remove();
                     });
                 });
-            }
+            }*/
 
             if(localStorage.getItem("userId") == listItem.user_id){
                 let delButton = document.createElement("button"); delButton.innerText = "Delete";
@@ -225,6 +233,14 @@
             let p = document.createElement("p");
             p.innerText = comment.content;
             li.appendChild(h6); li.appendChild(p);
+/*
+            if(localStorage.getItem("userId") == comment.user_id){
+                let commentDelButton = document.createElement("button"); commentDelButton.innerText = "Delete";
+                li.appendChild(commentDelButton);
+                commentDelButton.addEventListener('click', () => {
+
+                });
+            }*/
         }
     </script>
 </html>
