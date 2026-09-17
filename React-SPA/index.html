@@ -32,7 +32,7 @@
                             <input type="text" />
                             <textarea></textarea>
                             <button>Apply</button>
-                            <button>Cancel</button>
+                            <button onClick="setEdit(false)">Cancel</button>
                         </div>
                         <div style={{
                             display: (this.state.isEditing ? "none" : "")
@@ -40,10 +40,10 @@
                             <h5>{this.state.postTitle}</h5>
                             <h6>{this.state.postDate}</h6>
                             <p>{this.state.postBody}</p>
-                            <button style={{
+                            <button onClick="setEdit(true)" style={{
                                 display: (this.state.postUserId == localStorage.getItem("userId") ? "" : "none")
                             }}>Edit</button>
-                            <button style={{
+                            <button onClick="deletePost" style={{
                                 display: (this.state.postUserId == localStorage.getItem("userId") ? "" : "none")
                             }}>Delete</button>
                             <ul></ul>
@@ -53,6 +53,22 @@
             }
             setEdit(value){
                 this.state.isEditing = value;
+            }
+            editPost(){
+
+            }
+            deletePost(){
+                fetch(`http://127.0.0.1:8000/api/posts/${this.state.postId}`,{
+                    method: "DELETE",
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                })
+                .then(response => response.json())
+                .then(data => this.props.onDelete(this.state.postId))
+                .catch(err => console.error(err));
             }
         }
     </script>
