@@ -11,6 +11,49 @@
         <div id="main"></div>
     </body>
     <script type="text/babel">
-        
+        class PostInstance extends React.Component {
+            constructor(props){
+                super(props);
+                this.state = {
+                    postTitle: this.props.post.title,
+                    postBody: this.props.post.body,
+                    postDate: this.props.post.created_at,
+                    postId: this.props.post.id,
+                    postUserId: this.props.post.user_id,
+                    isEditing: false
+                };
+            }
+            render(){
+                return (
+                    <li>
+                        <div style={{
+                            display: (this.state.isEditing ? "" : "none")
+                        }}>
+                            <input type="text" />
+                            <textarea></textarea>
+                            <button>Apply</button>
+                            <button>Cancel</button>
+                        </div>
+                        <div style={{
+                            display: (this.state.isEditing ? "none" : "")
+                        }}>
+                            <h5>{this.state.postTitle}</h5>
+                            <h6>{this.state.postDate}</h6>
+                            <p>{this.state.postBody}</p>
+                            <button style={{
+                                display: (this.state.postUserId == localStorage.getItem("userId") ? "" : "none")
+                            }}>Edit</button>
+                            <button style={{
+                                display: (this.state.postUserId == localStorage.getItem("userId") ? "" : "none")
+                            }}>Delete</button>
+                            <ul></ul>
+                        </div>
+                    </li>
+                );
+            }
+            setEdit(value){
+                this.state.isEditing = value;
+            }
+        }
     </script>
 </html>
