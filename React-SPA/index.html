@@ -20,7 +20,11 @@
                     postDate: this.props.post.created_at,
                     postId: this.props.post.id,
                     postUserId: this.props.post.user_id,
-                    isEditing: false
+
+                    isEditing: false,
+
+                    editTitle: "",
+                    editBody: ""
                 };
             }
             render(){
@@ -29,10 +33,10 @@
                         <div style={{
                             display: (this.state.isEditing ? "" : "none")
                         }}>
-                            <input type="text" />
-                            <textarea></textarea>
-                            <button>Apply</button>
-                            <button onClick="setEdit(false)">Cancel</button>
+                            <input type="text" value={this.state.editTitle} onChange={(e) => this.setState({editTitle: e.target.value})} />
+                            <textarea value={this.state.editBody} onChange={(e) => this.setState({editBody: e.target.value})}></textarea>
+                            <button onClick={() => this.editPost()}>Apply</button>
+                            <button onClick={() => this.setEdit(false)}>Cancel</button>
                         </div>
                         <div style={{
                             display: (this.state.isEditing ? "none" : "")
@@ -40,10 +44,10 @@
                             <h5>{this.state.postTitle}</h5>
                             <h6>{this.state.postDate}</h6>
                             <p>{this.state.postBody}</p>
-                            <button onClick="setEdit(true)" style={{
+                            <button onClick={() => this.setEdit(true)} style={{
                                 display: (this.state.postUserId == localStorage.getItem("userId") ? "" : "none")
                             }}>Edit</button>
-                            <button onClick="deletePost" style={{
+                            <button onClick={() => this.deletePost()} style={{
                                 display: (this.state.postUserId == localStorage.getItem("userId") ? "" : "none")
                             }}>Delete</button>
                             <ul></ul>
@@ -51,13 +55,41 @@
                     </li>
                 );
             }
-            setEdit(value){
-                this.state.isEditing = value;
+            setEdit = (value) => {
+                if(value){
+                    this.setState({
+                        isEditing: value,
+                        editTitle: this.state.postTitle,
+                        editBody: this.state.postBody
+                    });
+                }else{
+                    this.setState({isEditing: value});
+                }
             }
-            editPost(){
-
+            editPost = () => {
+                fetch(`http://127.0.0.1:8000/api/posts/${this.state.postId}`, {
+                    method: "PUT",
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    },
+                    body: JSON.stringify({
+                        title: this.state.editTitle,
+                        body: this.state.editBody
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    this.setState({
+                        postTitle: data.title,
+                        postBody: data.body,
+                    });
+                    this.setEdit(false);
+                })
+                .catch(err => console.error(err));
             }
-            deletePost(){
+            deletePost = () => {
                 fetch(`http://127.0.0.1:8000/api/posts/${this.state.postId}`,{
                     method: "DELETE",
                     headers: {
